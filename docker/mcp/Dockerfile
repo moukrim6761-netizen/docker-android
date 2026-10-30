@@ -1,3 +1,4 @@
+
 FROM python:3.15.0-slim
 
 RUN apt-get -qqy update && apt-get -qqy install --no-install-recommends \
@@ -15,4 +16,4 @@ ENV PYTHONPATH=/mcp \
 
 EXPOSE 8000 8080
 
-CMD ["python", "-m", "src.server"]
+CMD ["python", "main.py"]

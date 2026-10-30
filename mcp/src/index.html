@@ -46,6 +46,7 @@
     .screen-frame iframe { width: 100%; height: 100%; position: absolute; inset: 0; border: 0; background: #1b211d; }
     .screen-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; color: var(--muted); font-size: 12px; }
     .text-button { padding: 6px 0; border: 0; background: none; color: var(--forest); font-weight: 700; }
+    a.text-button { display: inline-block; text-decoration: none; }
     .controls { display: grid; gap: 18px; padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
     .control-section { display: grid; gap: 10px; }
     .control-section + .control-section { padding-top: 17px; border-top: 1px solid var(--line); }
@@ -108,8 +109,8 @@
     <div class="workspace">
       <section class="screen-column" aria-label="شاشة الهاتف">
         <div class="screen-head"><h3>الشاشة المباشرة</h3><span id="window-label">التطبيق الحالي: --</span></div>
-        <div class="screen-frame"><iframe id="phone-screen" title="شاشة Android المباشرة" allow="clipboard-read; clipboard-write"></iframe></div>
-        <div class="screen-foot"><span>البث عبر noVNC</span><button class="text-button" id="refresh" type="button">تحديث حالة الجهاز</button></div>
+        <div class="screen-frame"><iframe id="phone-screen" title="شاشة Android المباشرة" allow="clipboard-read; clipboard-write; fullscreen" allowfullscreen></iframe></div>
+        <div class="screen-foot"><a class="text-button" id="open-novnc" target="_blank" rel="noopener noreferrer">فتح noVNC في تبويب مستقل</a><button class="text-button" id="refresh" type="button">تحديث حالة الجهاز</button></div>
       </section>
       <aside class="controls" aria-label="أدوات التحكم">
         <section class="control-section">
@@ -146,6 +147,7 @@
     const vncUrl = new URLSearchParams(location.search).get("vnc")
       || `${location.protocol}//${location.hostname}:6080/?autoconnect=true`;
     document.querySelector("#phone-screen").src = vncUrl;
+    document.querySelector("#open-novnc").href = vncUrl;
 
     function showMessage(text, isError = false) {
       message.textContent = text;

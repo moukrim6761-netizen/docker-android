@@ -15,6 +15,9 @@ services:
 
   android-mcp:
     image: budtmo/docker-android:mcp
+    build:
+      context: ../..
+      dockerfile: docker/mcp/Dockerfile
     environment:
       EMULATOR_HOST: android-emulator
       EMULATOR_PORT: 5555
@@ -24,6 +27,8 @@ services:
       MCP_PORT: 8000
     depends_on:
       - android-emulator
+    ports:
+      - "127.0.0.1:8080:8080"
     networks:
       - android-net
     restart: unless-stopped

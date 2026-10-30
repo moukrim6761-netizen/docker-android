@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f2eb">
+  <title>Android Cloud Phone</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f2f2eb;
+      --surface: #fffefa;
+      --ink: #1d2923;
+      --muted: #6b756e;
+      --line: #dce1d8;
+      --forest: #20372d;
+      --lime: #c6f36b;
+      --coral: #e77c5b;
+      --red: #bd4d42;
+      font-family: "Noto Sans Arabic", "Tahoma", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: var(--paper); color: var(--ink); }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .topbar { min-height: 76px; padding: 14px 5vw; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); background: var(--surface); }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { width: 42px; aspect-ratio: 1; display: grid; place-items: center; border-radius: 12px; background: var(--forest); color: var(--lime); font-size: 21px; font-weight: 800; }
+    .brand h1 { margin: 0; font-size: 17px; line-height: 1.4; }
+    .brand p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .connection { display: inline-flex; align-items: center; gap: 9px; color: var(--muted); font-size: 13px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #a4aaa4; }
+    .connection[data-online="true"] .dot { background: #538b36; box-shadow: 0 0 0 4px #e4f0d7; }
+    .connection[data-online="false"] .dot { background: var(--red); box-shadow: 0 0 0 4px #f7e5df; }
+    main { width: min(1440px, 92vw); margin: 30px auto 48px; }
+    .intro { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 20px; }
+    .intro h2 { margin: 0; font-size: clamp(22px, 3vw, 30px); }
+    .intro p { margin: 7px 0 0; color: var(--muted); font-size: 14px; }
+    .serial { direction: ltr; text-align: left; color: var(--muted); font: 12px ui-monospace, monospace; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(290px, .8fr); gap: 22px; align-items: start; }
+    .screen-column { min-width: 0; }
+    .screen-head { display: flex; align-items: center; justify-content: space-between; padding: 0 2px 11px; }
+    .screen-head h3, .controls h3 { margin: 0; font-size: 15px; }
+    .screen-head span { max-width: 62%; overflow: hidden; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    .screen-frame { position: relative; overflow: hidden; min-height: 300px; aspect-ratio: 16 / 10; background: #202820; border: 7px solid #29342d; border-radius: 12px; box-shadow: 0 16px 38px #1c2a2119; }
+    .screen-frame iframe { width: 100%; height: 100%; position: absolute; inset: 0; border: 0; background: #1b211d; }
+    .screen-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; color: var(--muted); font-size: 12px; }
+    .text-button { padding: 6px 0; border: 0; background: none; color: var(--forest); font-weight: 700; }
+    .controls { display: grid; gap: 18px; padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+    .control-section { display: grid; gap: 10px; }
+    .control-section + .control-section { padding-top: 17px; border-top: 1px solid var(--line); }
+    .control-title { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+    .control-title span { color: var(--muted); font-size: 11px; }
+    .field-row { display: flex; gap: 8px; }
+    input, select { min-width: 0; width: 100%; height: 42px; padding: 0 11px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); outline: none; }
+    input:focus, select:focus { border-color: #708c5b; box-shadow: 0 0 0 3px #dcebc8; }
+    .action { min-height: 40px; padding: 0 14px; border: 0; border-radius: 6px; background: var(--forest); color: white; font-weight: 700; white-space: nowrap; }
+    .action:hover { background: #31503e; }
+    .action:disabled { cursor: wait; opacity: .55; }
+    .app-row .action { width: 45px; padding: 0; font-size: 19px; }
+    .keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .key { min-height: 56px; display: grid; place-items: center; gap: 1px; border: 1px solid var(--line); border-radius: 6px; background: #fbfcf8; color: var(--ink); }
+    .key:hover { border-color: #a9bd97; background: #f2f7e9; }
+    .key b { font-size: 15px; }
+    .key span { color: var(--muted); font-size: 10px; }
+    .message { min-height: 20px; margin: -5px 0 0; color: var(--muted); font-size: 12px; }
+    .message[data-error="true"] { color: var(--red); }
+    .window-line { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: left; color: var(--muted); font: 11px ui-monospace, monospace; }
+    @media (max-width: 850px) {
+      main { width: min(100% - 28px, 680px); margin-top: 22px; }
+      .workspace { grid-template-columns: 1fr; }
+      .screen-frame { min-height: 220px; }
+      .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; }
+      .control-section + .control-section { padding-top: 0; border-top: 0; }
+      .control-section:nth-child(n + 3) { padding-top: 17px; border-top: 1px solid var(--line); }
+    }
+    @media (max-width: 540px) {
+      .topbar { min-height: 66px; padding: 10px 14px; }
+      .brand-mark { width: 38px; border-radius: 10px; }
+      .brand h1 { font-size: 14px; }
+      .brand p { font-size: 10px; }
+      .connection { font-size: 11px; }
+      main { width: calc(100% - 24px); margin-top: 18px; }
+      .intro { display: block; }
+      .serial { margin-top: 9px; text-align: right; }
+      .screen-frame { min-height: 190px; aspect-ratio: 4 / 3; border-width: 4px; }
+      .screen-foot { align-items: start; }
+      .controls { grid-template-columns: 1fr; padding: 16px; }
+      .control-section + .control-section, .control-section:nth-child(n + 3) { padding-top: 15px; border-top: 1px solid var(--line); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">A</div>
+      <div><h1>Android Cloud Phone</h1><p>لوحة التحكم عن بُعد</p></div>
+    </div>
+    <div class="connection" id="connection" data-online="pending" role="status">
+      <span class="dot" aria-hidden="true"></span><span id="connection-label">كنتحقق من الاتصال</span>
+    </div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><h2>الهاتف السحابي</h2><p>شاشة مباشرة وأدوات التحكم في جهاز Android ديالك.</p></div>
+      <div class="serial" id="serial">--:--</div>
+    </section>
+    <div class="workspace">
+      <section class="screen-column" aria-label="شاشة الهاتف">
+        <div class="screen-head"><h3>الشاشة المباشرة</h3><span id="window-label">التطبيق الحالي: --</span></div>
+        <div class="screen-frame"><iframe id="phone-screen" title="شاشة Android المباشرة" allow="clipboard-read; clipboard-write"></iframe></div>
+        <div class="screen-foot"><span>البث عبر noVNC</span><button class="text-button" id="refresh" type="button">تحديث حالة الجهاز</button></div>
+      </section>
+      <aside class="controls" aria-label="أدوات التحكم">
+        <section class="control-section">
+          <div class="control-title"><h3>فتح رابط</h3><span>فالمتصفح</span></div>
+          <form class="field-row" id="url-form"><input id="url" type="text" inputmode="url" placeholder="example.com" aria-label="الرابط" required><button class="action" type="submit">فتح</button></form>
+        </section>
+        <section class="control-section">
+          <div class="control-title"><h3>تشغيل تطبيق</h3><span>اختار تطبيق</span></div>
+          <form class="field-row app-row" id="app-form">
+            <select id="app" aria-label="التطبيق"><option value="browser">Chrome</option><option value="calendar">التقويم</option><option value="contacts">جهات الاتصال</option><option value="messages">الرسائل</option><option value="photo">الصور</option><option value="settings">الإعدادات</option></select>
+            <button class="action" type="submit" aria-label="تشغيل التطبيق" title="تشغيل التطبيق">&#8592;</button>
+          </form>
+        </section>
+        <section class="control-section">
+          <div class="control-title"><h3>أزرار الجهاز</h3><span>تحكم سريع</span></div>
+          <div class="keys">
+            <button class="key" type="button" data-button="back"><b>&#8592;</b><span>رجوع</span></button>
+            <button class="key" type="button" data-button="home"><b>&#9679;</b><span>الرئيسية</span></button>
+            <button class="key" type="button" data-button="enter"><b>&#8629;</b><span>إدخال</span></button>
+          </div>
+        </section>
+        <p class="message" id="message" role="status" aria-live="polite"></p>
+      </aside>
+    </div>
+  </main>
+  <script>
+    const connection = document.querySelector("#connection");
+    const connectionLabel = document.querySelector("#connection-label");
+    const message = document.querySelector("#message");
+    const serial = document.querySelector("#serial");
+    const windowLabel = document.querySelector("#window-label");
+    const actionButtons = [...document.querySelectorAll(".action, .key")];
+
+    const vncUrl = new URLSearchParams(location.search).get("vnc")
+      || `${location.protocol}//${location.hostname}:6080/?autoconnect=true`;
+    document.querySelector("#phone-screen").src = vncUrl;
+
+    function showMessage(text, isError = false) {
+      message.textContent = text;
+      message.dataset.error = String(isError);
+    }
+
+    async function refreshStatus() {
+      try {
+        const response = await fetch("/api/status", { cache: "no-store" });
+        const data = await response.json();
+        connection.dataset.online = String(data.connected);
+        connectionLabel.textContent = data.connected ? "متصل" : "غير متصل";
+        serial.textContent = data.serial || "--:--";
+        windowLabel.textContent = data.connected ? `التطبيق الحالي: ${data.current_window || "غير معروف"}` : "التطبيق الحالي: --";
+        if (!data.connected) showMessage(data.error || "الجهاز غير متصل حالياً.", true);
+      } catch {
+        connection.dataset.online = "false";
+        connectionLabel.textContent = "الخادم غير متاح";
+        showMessage("تعذر الاتصال بخادم التحكم.", true);
+      }
+    }
+
+    async function performAction(payload) {
+      actionButtons.forEach((button) => { button.disabled = true; });
+      showMessage("كننفذ الأمر...");
+      try {
+        const response = await fetch("/api/action", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "فشل تنفيذ الأمر.");
+        showMessage("تنفذ الأمر بنجاح.");
+        refreshStatus();
+      } catch (error) {
+        showMessage(error.message, true);
+      } finally {
+        actionButtons.forEach((button) => { button.disabled = false; });
+      }
+    }
+
+    document.querySelector("#url-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      performAction({ action: "navigate", url: document.querySelector("#url").value });
+    });
+    document.querySelector("#app-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      performAction({ action: "open_app", app_name: document.querySelector("#app").value });
+    });
+    document.querySelectorAll("[data-button]").forEach((button) => {
+      button.addEventListener("click", () => performAction({ action: "button", button: button.dataset.button }));
+    });
+    document.querySelector("#refresh").addEventListener("click", refreshStatus);
+    refreshStatus();
+    window.setInterval(refreshStatus, 15000);
+  </script>
+</body>
+</html>

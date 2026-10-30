@@ -11,6 +11,8 @@ class Settings:
         self.adb_command_timeout_s = int(os.environ.get("ADB_COMMAND_TIMEOUT_SECONDS", "30"))
         self.mcp_host = os.environ.get("MCP_HOST", "0.0.0.0")
         self.mcp_port = int(os.environ.get("MCP_PORT", "8000"))
+        self.ui_host = os.environ.get("UI_HOST", "0.0.0.0")
+        self.ui_port = int(os.environ.get("UI_PORT", "8080"))
 
 
 settings = Settings()

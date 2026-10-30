@@ -13,6 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONPATH=/mcp \
 	PYTHONUNBUFFERED=1
 
-EXPOSE 8000
+EXPOSE 8000 8080
 
 CMD ["python", "-m", "src.server"]

@@ -98,6 +98,11 @@ Quick Start
     docker exec -it android-container cat device_status
     ```
 
+Android Cloud Phone UI
+----------------------
+
+The MCP image serves a browser control panel on port `8080`. In the MCP container, the server module is launched from `/mcp` with `python -m src.server`; run it as a module because the server uses package-relative imports. The Compose example publishes the control panel at [http://localhost:8080](http://localhost:8080) and the live noVNC screen at [http://localhost:6080](http://localhost:6080). The control panel has no built-in authentication; keep it on a trusted network.
+
 Persisting data
 -----------
 

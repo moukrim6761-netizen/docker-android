@@ -1,10 +1,12 @@
 import logging
+import threading
 import time
 
 from fastmcp import FastMCP
 
 from .adb import AdbClient, AdbConnectionError
 from .config import settings
+from .ui import serve_ui
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -75,6 +77,7 @@ def wait(seconds: int) -> dict:
     return {"status": "ok", "waited_seconds": seconds}
 
 def main() -> None:
+    threading.Thread(target=serve_ui, args=(adb,), daemon=True).start()
     try:
         _ensure_connected()
     except AdbConnectionError as ace:

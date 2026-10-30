@@ -76,6 +76,11 @@ class AdbClient:
         for attempt in range(1, retries + 1):
             try:
                 output = self._adb("connect", self.serial)
+            except FileNotFoundError as error:
+                self._connected = False
+                raise AdbConnectionError(
+                    f"ADB executable '{self.adb_path}' was not found"
+                ) from error
             except AdbCommandError as ace:
                 last_error = str(ace)
             else:

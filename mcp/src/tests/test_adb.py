@@ -61,6 +61,11 @@ def test_unable_to_connect(monkeypatch):
     assert client.is_connected() is False
     assert len(calls) == 2
 
+def test_missing_adb_executable():
+    client = AdbClient(host="127.0.0.1", port=5555, adb_path="missing-adb-executable")
+    with pytest.raises(AdbConnectionError, match="ADB executable 'missing-adb-executable' was not found"):
+        client.connect(retries=1, delay=0)
+
 def test_adb_error():
     client, _ = make_client(text_responses=[(1, "", "server not running")])
     with pytest.raises(AdbCommandError):

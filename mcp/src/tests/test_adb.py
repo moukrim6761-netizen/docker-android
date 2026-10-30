@@ -68,7 +68,10 @@ def test_missing_adb_executable():
 
 def test_adb_error():
     client, _ = make_client(text_responses=[(1, "", "server not running")])
-    with pytest.raises(AdbCommandError):
+    with pytest.raises(
+        AdbCommandError,
+        match=r"adb devices -l failed with exit code 1: server not running",
+    ):
         client.devices()
 
 def test_visit_url():

@@ -43,14 +43,14 @@ class GenySAAS(Genymotion):
                 elif k.lower() == "local_port":
                     local_port = v
                 else:
-                    self.logger.warning(f"'{k}' is not supported! Please check the documentation!")
+                    self.logger.warning("'%s' is not supported! Please check the documentation!", k)
             
             if not name:
                 name = str(uuid.uuid4())
             
             if not template:
                 self.shutdown_and_logout()
-                raise RuntimeError(f"'template' is a must parameter and not given!")
+                raise RuntimeError("'template' is a must parameter and not given!")
             
             items.append({
                 'name': name,

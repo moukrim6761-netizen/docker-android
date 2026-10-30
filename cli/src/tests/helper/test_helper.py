@@ -1,5 +1,4 @@
 import os
-import mock
 
 from helper import convert_str_to_bool, get_env_value_or_raise, symlink_force
 from tests import BaseTest

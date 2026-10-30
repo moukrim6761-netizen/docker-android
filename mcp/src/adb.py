@@ -16,7 +16,7 @@ class AdbCommandError(RuntimeError):
         self.rc = rc
         self.stderr = stderr
         super().__init__(
-            f"adb {" ".join(args)} failed with exit code {rc}: {stderr.strip()}"
+            f"adb {' '.join(args)} failed with exit code {rc}: {stderr.strip()}"
         )
 
 
@@ -142,7 +142,7 @@ class AdbClient:
     def press_button(self, button: str) -> str:
         try:
             keycode = _KEY_EVENTS[button.strip().lower()]
-        except KeyError as ke:
+        except KeyError:
             supported = ", ".join(sorted(_KEY_EVENTS))
             raise ValueError(f"Button {button} not supported. Supported buttons: {supported}")
         return self._device_shell(f"input keyevent {keycode}").strip()

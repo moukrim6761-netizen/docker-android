@@ -60,7 +60,7 @@ def cli():
 
 def start_appium() -> None:
     if convert_str_to_bool(os.getenv(ENV.APPIUM)):
-        cmd = f"/usr/local/bin/appium"
+        cmd = "/usr/local/bin/appium"
         app_appium = Application("Appium", cmd,
                                  os.getenv(ENV.APPIUM_ADDITIONAL_ARGS, ""), False)
         app_appium.start()
@@ -196,7 +196,7 @@ def shared_log() -> None:
         httpd = HTTPServer(('0.0.0.0', log_port), LogSharedHandler)
         httpd.serve_forever()
     else:
-        logger.info(f"Shared log is disabled! nothing to do!")
+        logger.info("Shared log is disabled! nothing to do!")
 
 
 @cli.command()

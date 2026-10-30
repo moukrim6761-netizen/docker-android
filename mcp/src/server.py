@@ -80,7 +80,7 @@ def main() -> None:
     threading.Thread(target=serve_ui, args=(adb,), daemon=True).start()
     try:
         _ensure_connected()
-    except AdbConnectionError as ace:
+    except AdbConnectionError:
         logger.warning("Starting MCP server without a confirmed emulator connection. "
                        "Tool call will retry the connection automatically.")
     mcp.run(transport="http", host=settings.mcp_host, port=settings.mcp_port)

@@ -115,7 +115,7 @@ class Emulator(Device):
         override_confg_path = os.getenv(ENV.EMULATOR_CONFIG_PATH)
 
         if override_confg_path is None:
-            self.logger.info(f"The environment variable 'EMULATOR_CONFIG_PATH' is not set")
+            self.logger.info("The environment variable 'EMULATOR_CONFIG_PATH' is not set")
             return
 
         self.logger.info(f"Environment variable 'EMULATOR_CONFIG_PATH' found: {override_confg_path}")
@@ -234,7 +234,7 @@ class Emulator(Device):
         interval_pop_up = 0
         max_attempt_pop_up = 3
         pop_up_system_ui = "Not Responding: com.android.systemui"
-        system_ui_cmd = f"adb shell su root 'kill $(pidof com.android.systemui)'"
+        system_ui_cmd = "adb shell su root 'kill $(pidof com.android.systemui)'"
         pop_up_key_enter = {
             "Not Responding: com.google.android.gms",
             "Not Responding: system",
